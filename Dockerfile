@@ -24,10 +24,10 @@ WORKDIR /opt
 # OpenAI Gym and pfrl 
 ############################################
 RUN pip3 install --upgrade pip
-RUN pip3 install 'gym[atari]' 'gym[box2d]' 'gym[classic_control]' pfrl six
+RUN pip3 install 'gym[atari]' 'gym[classic_control]' pfrl six
 
 # Test pfrl
 RUN cd /opt \
-    && curl https://raw.githubusercontent.com/pfnet/pfrl/master/examples/atari/reproduction/dqn/train_dqn.py > train_dqn.py \
+    && python3 -c 'import urllib.request; open("train_dqn.py", "wb").write(urllib.request.urlopen("https://raw.githubusercontent.com/pfnet/pfrl/master/examples/atari/reproduction/dqn/train_dqn.py").read())' \
     && python3 train_dqn.py --env PongNoFrameskip-v4 --steps 100 --replay-start-size 50 --outdir /opt/dqn-result --eval-n-steps 200 --eval-interval 50 --n-best-episodes 1 --gpu -1 \
-    && rm -rf /opt/dqn-result
+    && rm -rf /opt/dqn-result && rm /opt/train_dqn.py
